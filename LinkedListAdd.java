@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class LinkedListAdd {
-    Node head;
+    static Node head;
 
     class Node {
         int value;
@@ -13,30 +13,30 @@ public class LinkedListAdd {
         }
     }
 
-    public void update(int position, int newValue) {
+    public void update(int oldValue, int newValue) {
         if (contains(newValue)) {
             System.out.println("Duplicate value found: " + newValue);
             return;
         }
         if (head == null) {
             System.out.println("List is empty. Update not possible.");
-        } else {
-            Node temp = head;
-            int count = 0;
-            while (temp != null) {
-                if (count == position) {
-                    temp.value = newValue;
-                    break;
-                } else {
-                    count++;
-                    temp = temp.address;
-                }
+            return;
+        }
+        Node temp = head;
+        boolean found = false;
+        while (temp != null) {
+            if (temp.value == oldValue) {
+                temp.value = newValue;
+                found = true;
+                break;
             }
-            if (temp == null) {
-                System.out.println("Position out of bounds. Update not possible.");
-            }
+            temp = temp.address;
+        }
+        if (!found) {
+            System.out.println("Value not found in the list. Update not possible.");
         }
     }
+    
 
     public void insert(int data) {
         if (contains(data)) {
@@ -71,18 +71,22 @@ public class LinkedListAdd {
         return false;
     }
 
-    public void deleteLastValue() {
-        if (head == null) {
-            System.out.println("List is empty. So deletion is not possible");
+    public void delete(int data) {
+        if (head.value == data) {
+            head = head.address;
+
         } else {
-            Node iterNode = head;
-            if (iterNode.address == null) {
-                head = null;
+
+            Node currNode = head;
+            while (currNode.address != null && currNode.address.value != data) {
+                currNode = currNode.address;
+            }
+            if (currNode.address != null) {
+                currNode.address = currNode.address.address;
+                System.out.println("the data is " + data + " deleted");
+
             } else {
-                while (iterNode.address.address != null) {
-                    iterNode = iterNode.address;
-                }
-                iterNode.address = null;
+                System.out.println("the data is not in the list");
             }
         }
     }
@@ -95,7 +99,7 @@ public class LinkedListAdd {
             System.out.println("-----------------------");
 
             while (temp != null) {
-                System.out.println(temp.value + " " + (temp.address != null ? temp.address.value : "null"));
+                System.out.println(temp.value + " " + temp.address);
                 temp = temp.address;
             }
         }
@@ -113,6 +117,7 @@ public class LinkedListAdd {
             System.out.println("3. Update");
             System.out.println("4. delete");
             System.out.println("5. Exit");
+            System.out.print("Enter your choose:");
             int choice = UserInput.nextInt();
             UserInput.nextLine();
 
@@ -126,14 +131,21 @@ public class LinkedListAdd {
                     list.display();
                     break;
                 case 3:
-                    System.out.println("Enter position to update:");
+                    System.out.println("Enter dato to update:");
                     int updatePosition = UserInput.nextInt();
                     System.out.println("Enter new value:");
                     int newValue = UserInput.nextInt();
                     list.update(updatePosition, newValue);
                     break;
                 case 4:
-                    list.deleteLastValue();
+                    if (head == null) {
+                        System.out.println("list is empty");
+                    }
+                    else {
+                        System.out.println("enter your data which you want to delete:");
+                        int data = UserInput.nextInt();
+                        list.delete(data);
+                    }
                     break;
                 case 5:
                     exit = true;
