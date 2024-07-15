@@ -1,171 +1,241 @@
 import java.util.Scanner;
 
 class LinkedList {
-    public Node head;
+    static Node head;
 
-    public LinkedList() {
-        this.head = null;
-    }
-
-    public class Node {
-        int data;
-        Node next;
-
-        public Node(int data) {
-            this.data = data;
-            this.next = null;
+    public static Node insert(int data, Node head) {
+        if (contains(data,head)) {
+            System.out.println("Duplicate value found: " + data);
+            return head;
         }
-    }
 
-    public void add(int data) {
         Node newNode = new Node(data);
-        if (head == null || data <= head.data) {
-            if (head != null && head.data == data) {
-                System.out.println("This data is already exist");
-                return;
-            }
-            newNode.next = head;
-            head = newNode;
-            System.out.println("Your data added successfully");
-            return;
-        }
-        Node current = head;
-        while (current.next != null && data > current.next.data) {
-            if (current.next.data == data) {
-                System.out.println("This data is already exist");
-                return;
-            }
-            current = current.next;
-        }
 
-        newNode.next = current.next;
-        current.next = newNode;
-        System.out.println("Your data added successfully");
+        if (head == null || head.data > data) {
+            // newNode.nextAddress = head;
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.nextAddress != null && current.nextAddress.data < data) {
+                current = current.nextAddress;
+            }
+            newNode.nextAddress = current.nextAddress;
+            current.nextAddress = newNode;
+        }
+        System.out.println("Node inserted successfully");
+        return head;
     }
 
-    public void display() {
+    public static boolean contains(int data, Node head) {
+        // Node current = head;
+        while (head != null) {
+            if (head.data == data) {
+                return true;
+            }
+            head = head.nextAddress;
+        }
+        return false;
+    }
+
+    public static void display(Node head) {
         if (head == null) {
             System.out.println("List is empty");
         } else {
             Node temp = head;
             while (temp != null) {
-                System.out.println(temp.data +" "+ temp.next);
-                temp = temp.next;
+                System.out.println(temp.data + " " + temp.nextAddress);
+                temp = temp.nextAddress;
             }
-            // System.out.println("null");
         }
     }
 
-    public void update(int oldData, int newData) {
-        Node current = head;
-        while (current != null && current.data != oldData) {
-            current = current.next;
-        }
+    // public void update(int oldValData, int newData) {
+    // if (delete(oldValData)) {
+    // insert(newData);
+    // }
+    // else{
+    // System.out.println("Data is not fount");
+    // }
+    // }
 
-        if (current == null) {
-            System.out.println("Data to update not found");
+
+   /* public void update(int oldVal, int newVal) {
+        Node newNode = new Node(newVal);
+        Node curNode = head;
+
+        if (newVal < oldVal) {
+            if (curNode.data > newVal) {
+                newNode.nextAddress = curNode;
+                head = newNode;
+
+                while (curNode.nextAddress != null) {
+                    if (curNode.nextAddress.data == oldVal) {
+                        curNode.nextAddress = curNode.nextAddress.nextAddress;
+                    } else {
+                        curNode = curNode.nextAddress;
+                    }
+                }
+            }
+            
+            else {
+                while (curNode.nextAddress != null) {
+                    if (curNode.nextAddress.data == oldVal) {
+                        curNode.nextAddress = curNode.nextAddress.nextAddress;
+                    } else {
+                        curNode = curNode.nextAddress;
+                    }
+                }
+                newNode.nextAddress = curNode.nextAddress;
+                curNode.nextAddress = newNode;
+            }
+
+            // else {
+            // System.out.println("else condition");
+            // if (curNode.nextAddress.data > newVal) {
+            // newNode.nextAddress = curNode.nextAddress;
+            // curNode.nextAddress = newNode;
+            // while (curNode.nextAddress != null) {
+            // if (curNode.nextAddress.data == oldVal) {
+            // curNode.nextAddress = curNode.nextAddress.nextAddress;
+            // } else {
+            // curNode = curNode.nextAddress;
+            // }
+            // }
+            // if(curNode.nextAddress == null){
+            // curNode.data = newVal;
+            // curNode = curNode.nextAddress;
+            // }
+            // }
+            // else{
+            // curNode = curNode.nextAddress;
+
+            // }
+
+            // }
         } else {
-            current.data = newData;
-            System.out.println("Data updated successfully");
+            System.out.println("eeeeeeefr3rf");
+        }
+    }*/ 
+
+    public static Node update(int oldVal, int newVal, Node head){
+        Node newNode = new Node(newVal);
+        Node current = head;
+
+        if (newVal < oldVal) {
+            // Adding new value
+            if (head == null || head.data > newVal) {
+                head = newNode;
+            } else {                
+                while (current.nextAddress != null && current.nextAddress.data < newVal) {
+                    current = current.nextAddress;
+                }
+                newNode.nextAddress = current.nextAddress;
+                current.nextAddress = newNode;
+            }
+            //deleteing old value
+            return delete(oldVal, current);            
+        }
+        else{
+            // delete the old value
+            while (current.nextAddress != null && current.nextAddress.data != oldVal) {
+                current = current.nextAddress;
+            }
+            if (current.nextAddress != null) {
+                current.nextAddress = current.nextAddress.nextAddress;
+            }
+            //the value not exit
+            // else {
+            //     return head;
+            // }
+            //Adding new value
+            return insert(newVal, current);
         }
     }
 
-    public void delete(int data) {
-        if (head == null) {
-            System.out.println("List is empty");
-            return;
-        }
-
+    public static Node delete(int data, Node head) {
         if (head.data == data) {
-            head = head.next;
+            head = null;
             System.out.println("Data " + data + " deleted");
-            return;
+            return head;
         }
 
-        Node current = head;
-        while (current.next != null && current.next.data != data) {
-            current = current.next;
-        }
-
-        if (current.next != null) {
-            current.next = current.next.next;
-            System.out.println("Data " + data + " deleted");
-        } else {
-            System.out.println("Data " + data + " not found");
-        }
-    }
-
-    public void getMax() {
-        if (head == null) {
-            System.out.println("List is empty");
-            return;
-        }
-
-        Node current = head;
-        int max = head.data;
-        while (current != null) {
-            if (current.data > max) {
-                max = current.data;
+        else if (head.data < data) {
+            Node current = head;
+            while (current.nextAddress != null && current.nextAddress.data != data) {
+                if (data < current.data) {
+                    System.out.println("Data " + data + " not found");
+                    return head;
+                }
+                current = current.nextAddress;
             }
-            current = current.next;
+            if (current.nextAddress != null) {
+                current.nextAddress = current.nextAddress.nextAddress;
+                System.out.println("Data " + data + " deleted");
+                return head;
+            } else {
+                System.out.println("Data " + data + " not found");
+                return head;
+            }
         }
-        System.out.println("Maximum value in the list: " + max);
+        System.out.println("Data " + data + " not found");
+        return head;
     }
 
     public static void main(String[] args) {
-        LinkedList list = new LinkedList();
-        Scanner scanner = new Scanner(System.in);
-        int userInput = 0;
+
+        // LinkedList list = new LinkedList();
+        Scanner UserInput = new Scanner(System.in);
         boolean entry = true;
 
-        while (entry) {
+        do {
             System.out.println("-----------------------");
-            System.out.println("1. Add data");
-            System.out.println("2. Display list");
-            System.out.println("3. Get maximum value");
-            System.out.println("4. Delete data");
-            System.out.println("5. Update data");
-            System.out.println("6. Exit");
-
+            System.out.println("1. Insert the node");
+            System.out.println("2. Display");
+            System.out.println("3. delete");
+            System.out.println("4. Update");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
-            userInput = scanner.nextInt();
+            int userInput = UserInput.nextInt();
 
             switch (userInput) {
                 case 1:
                     System.out.println("Enter data to add:");
-                    int dataToAdd = scanner.nextInt();
-                    list.add(dataToAdd);
+                    int dataToAdd = UserInput.nextInt();
+                    head = insert(dataToAdd, head);                    
                     break;
                 case 2:
-                    list.display();
+                    display(head);
                     break;
+
                 case 3:
-                    list.getMax();
-                    break;
-                case 4:
-                    if (list.head == null) {
+                    if (head == null) {
                         System.out.println("List is empty");
                     } else {
                         System.out.println("Enter data to delete:");
-                        int dataToDelete = scanner.nextInt();
-                        list.delete(dataToDelete);
+                        int dataToDelete = UserInput.nextInt();
+                        head = delete(dataToDelete,head);
                     }
                     break;
-                case 5:
-                    System.out.println("Enter data to update:");
-                    int oldData = scanner.nextInt();
-                    System.out.println("Enter new data:");
-                    int newData = scanner.nextInt();
-                    list.update(oldData, newData);
+                case 4:
+                    if (head == null) {
+                        System.out.println("List is empty");
+                    } else {
+                        System.out.println("Enter data to update:");
+                        int oldValData = UserInput.nextInt();
+                        System.out.println("Enter new data:");
+                        int newData = UserInput.nextInt();
+                        head = update(oldValData, newData,head);
+                    }
+
                     break;
-                case 6:
+                case 5:
                     entry = false;
                     break;
                 default:
                     System.out.println("Invalid choice");
                     break;
             }
-        }
+        } while (entry);
         System.out.println("You exited");
     }
 }
