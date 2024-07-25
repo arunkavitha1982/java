@@ -156,91 +156,27 @@ class Node {
         }
     }
 
-    static void FindMaximum() {
-        if (head == null) {
-            System.out.println("Node is empty");
-            return;
-        }
-        Node temp = head;
-        int max = temp.data;
-        while (temp != null) {
-            if (temp.data > max) {
-                max = temp.data;
-            }
-            temp = temp.next;
-        }
-        System.out.println("The Maximum Value is : " + max);
-    }
-
-    static void FindMinimum() {
-        if (head == null) {
-            System.out.println("Node is empty");
-            return;
-        }
-        Node temp = head;
-        int min = temp.data;
-        // traverse by palani anna requirement
-        // while (temp != null) {
-        // if (temp.data < min) {
-        // min = temp.data;
-        // }
-        // temp = temp.next;
-        // }
-
-        System.out.println("The Minimum Value is : " + min);
-    }
-
-    static void findLength() {
-        Node temp = head;
-        int count = 0;
-        while (temp != null) {
-            count += 1;
-            temp = temp.next;
-        }
-        System.out.println("The length of the list is : " + count);
-    }
-
-    static void findAverage() {
-        if (head == null) {
-            System.out.println("Node is empty");
-            return;
-        }
-        Node temp = head;
-        int sum = 0;
-        int count = 0;
-        while (temp != null) {
-            sum += temp.data;
-            count++;
-            temp = temp.next;
-        }
-        double average = (double) sum / count;
-        System.out.println("The Average Value is : " + average);
-    }
-
     public static void main(String[] args) {
         Scanner inputScanner = new Scanner(System.in);
 
         int userChoice;
         do {
-            System.out.println(GREEN + "\n<----------- LINKED LIST ------------>\n" + RESET);
+            System.out.println(  "\n<----------- LINKED LIST ------------>\n");
             System.out.println("1 --> Add values in list");
             System.out.println("2 --> Delete values in list");
             System.out.println("3 --> Update values in list");
             System.out.println("4 --> Display list");
-            System.out.println("5 --> Find maximum Value");
-            System.out.println("6 --> Find minimum Value");
-            System.out.println("7 --> Find Average Value");
-            System.out.println("8 --> Exit\n");
-            System.out.print(BLUE + "Enter Your Choice : " + RESET);
+            System.out.println("5 --> Exit\n");
+            System.out.print(BLUE + "Enter Your Choice : "  );
             userChoice = inputScanner.nextInt();
             switch (userChoice) {
                 case 1:
-                    System.out.print(GREEN + "\nEnter your value you want to add at the beginning: " + RESET);
+                    System.out.print(  "\nEnter your value: " );
                     int data = inputScanner.nextInt();
                     add(data);
                     break;
                 case 2:
-                    System.out.print(GREEN + "\nEnter your value you want to delete " + RESET);
+                    System.out.print(  "\nEnter your delete value");
                     int uselessData = inputScanner.nextInt();
                     Delete(uselessData);
                     break;
@@ -249,12 +185,12 @@ class Node {
                         System.err.println("List is empty");
 
                     } else {
-                        System.out.print(GREEN + "\nEnter the old value " + RESET);
+                        System.out.print(  "\nEnter the old value ");
                         int oldValue = inputScanner.nextInt();
                         if (head.data > oldValue) {
                             System.out.println("The Entered old value not Found in the list");
                         } else {
-                            System.out.print(GREEN + "\nEnter the new value " + RESET);
+                            System.out.print(  "\nEnter the new value "  );
                             int newValue = inputScanner.nextInt();
                             Update(oldValue, newValue);
                         }
@@ -265,22 +201,10 @@ class Node {
                     display();
                     break;
                 case 5:
-                    FindMaximum();
-                    break;
-                case 6:
-                    FindMinimum();
-                    break;
-                case 7:
-                    findAverage();
-                    break;
-                case 8:
-                    findLength();
-                    break;
-                case 9:
-                    System.out.println(GREEN + "Exit successfully" + RESET);
+                    System.out.println(  "Exit successfully"  );
                     break;
                 default:
-                    System.out.println(RED + "Invalid choice" + RESET);
+                    System.out.println(   "Invalid choice"  );
                     break;
             }
         } while (userChoice != 8);
