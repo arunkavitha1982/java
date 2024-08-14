@@ -11,52 +11,83 @@ public class tree {
     }
 
     static Node root;
-    Node traversal;
 
-    public void add(int value) {
+    // public void add(int value) {
+    //     Node newNode = new Node(value);
+        
+    //     if (root == null) {
+    //         root = newNode;
+    //         System.out.println("Value added to the tree successfully!");
+    //         return;
+    //     }
+        
+    //     Node traversal = root;
+    //     Node parent = null;
+        
+    //     while (traversal != null) {
+    //         parent = traversal;
+            
+    //         if (value == traversal.data) {
+    //             System.out.println("Value already exists");
+    //             return;
+    //         } else if (value < traversal.data) {
+    //             traversal = traversal.left;
+    //         } else {
+    //             traversal = traversal.right;
+    //         }
+    //     }
+        
+    //     if (value < parent.data) {
+    //         parent.left = newNode;
+    //     } else {
+    //         parent.right = newNode;
+    //     }
+        
+    //     System.out.println("Value added to the tree successfully!");
+    // }
+    Node add(int val) {
+		Node newNode = new Node(val);
+		if (root==null) {
+			root=newNode;
+			System.out.println("successfully root was created");
+		} else if(root.data==val) {
+			System.out.println("The root value already exists");
+		}
+		else
+		{
+			Node curr = root;
+			while(val<curr.data || val>curr.data)
+			{
+				if (val < curr.data)
+				{
+					if (curr.left == null)
+					{
+						curr.left = newNode;
+						System.out.println("the value of added in left");
+						break;
+					} else
+					{
+						curr = curr.left;
+					}
 
-        Node newNode = new Node(value);
-        if (root == null) {
-            root = newNode;
-            System.out.println("value added to the tree succesfully!");
-        } else if (value == root.data) {
-            System.out.println("value alredy exist");
-        } else {
-            traversal = root;
+				}
+				else
+				{
+					if (curr.right == null)
+					{
+						curr.right = newNode;
+						System.out.println("the value of added in right");
+						break;
+					} else {
+						curr = curr.right;
+					}
 
-            while (value > traversal.data) {
+				}
+			}
+		}
+        return newNode;
+	}
 
-                if (traversal.right == null) {
-                    traversal.right = newNode;
-                    System.out.println("value added to the tree succesfully!");
-                    break;
-                } else {
-                    traversal = traversal.right;
-                    if (value == traversal.data) {
-                        System.out.println("value already exist");
-                        break;
-                    }
-                }
-            }
-
-            while (value < traversal.data) {
-                if (value == traversal.data) {
-                    System.out.println("value already exist");
-                } else if (traversal.left == null) {
-                    traversal.left = newNode;
-                    System.out.println("value added to the tree succesfully!");
-                    break;
-                } else {
-                    traversal = traversal.left;
-                    if (value == traversal.data) {
-                        System.out.println("value already exist");
-                        break;
-                    }
-                }
-            }
-
-        }
-    }
 
     public void inOrder(Node root) {
         if (root != null) {
@@ -64,89 +95,52 @@ public class tree {
             System.out.println(root.data);
             inOrder(root.right);
         }
-
     }
 
     public void preOrder(Node root) {
         if (root != null) {
             System.out.println(root.data);
-            inOrder(root.left);
-            inOrder(root.right);
+            preOrder(root.left);
+            preOrder(root.right);
         }
-
     }
 
     public void postOrder(Node root) {
         if (root != null) {
-            inOrder(root.left);
-            inOrder(root.right);
+            postOrder(root.left);
+            postOrder(root.right);
             System.out.println(root.data);
         }
-
     }
 
-    public void delete(int deleteVal) {
-        Node current = root;
-        Node previous = null;
-        while (current != null && current.data != deleteVal) {
-            previous = current;
-            if (deleteVal < current.data) {
-                current = current.left;
-            } else {
-                current = current.right;
-            }
-        }
-
-        if (current == null) {
+    Node delete(Node root, int val) {
+        if (root == null) {
             System.out.println("Value not found in the tree.");
+            return null;
         }
-
-        else if (current.left == null && current.right == null) {
-            if (previous == null) {
-                root = null;
-            } else if (previous.left == current) {
-                previous.left = null;
+    
+        if (val < root.data) {
+            root.left = delete(root.left, val);
+        } else if (val > root.data) {
+            root.right = delete(root.right, val);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
             } else {
-                previous.right = null;
+                Node currentNode = root.right;
+                while (currentNode.left != null) {
+                    currentNode = currentNode.left;
+                }
+                root.data = currentNode.data;
+                root.right = delete(root.right, currentNode.data);
             }
-            System.out.println("Value deleted successfully");
+            System.out.println("Value deleted successfully.");
         }
-
-        else if (current.left == null || current.right == null) {
-            Node child;
-            if (current.left != null) {
-                child = current.left;
-            } else {
-                child = current.right;
-            }
-
-            if (previous == null) {
-                root = child;
-            } else if (previous.left == current) {
-                previous.left = child;
-            } else {
-                previous.right = child;
-            }
-            System.out.println("Value deleted successfully");
-        }
-
-        else {
-            Node node1 = current;
-            Node node2 = current.right;
-            while (node2.left != null) {
-                node1 = node2;
-                node2 = node2.left;
-            }
-            current.data = node2.data;
-            if (node1 != current) {
-                node1.left = node2.right;
-            } else {
-                node1.right = node2.right;
-            }
-            System.out.println("Value deleted successfully");
-        }
-
+        return root;
     }
+    
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -154,17 +148,18 @@ public class tree {
 
         int choice = 0;
         while (choice != 6) {
-            System.out.println("1. Push");
-            System.out.println("2. inOrder ");
-            System.out.println("3. preOrder ");
-            System.out.println("4. postOrder ");
-            System.out.println("5. delete ");
-            System.out.println("6. exit ");
-            System.out.print("enter your choice : ");
+            System.out.println("1. Insert Data");
+            System.out.println("2. InOrder Traversal");
+            System.out.println("3. PreOrder Traversal");
+            System.out.println("4. PostOrder Traversal");
+            System.out.println("5. Delete Node");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
+            
             switch (choice) {
                 case 1:
-                    System.out.print("Enter the value to be added : ");
+                    System.out.print("Enter the value to be added: ");
                     int value = scanner.nextInt();
                     bintree.add(value);
                     break;
@@ -180,7 +175,6 @@ public class tree {
                         System.out.println("Tree is empty");
                     } else {
                         bintree.preOrder(root);
-
                     }
                     break;
                 case 4:
@@ -188,21 +182,19 @@ public class tree {
                         System.out.println("Tree is empty");
                     } else {
                         bintree.postOrder(root);
-
                     }
                     break;
                 case 5:
                     if (root == null) {
                         System.out.println("Tree is empty");
                     } else {
-                        System.out.print("Enter the value to be deleted : ");
+                        System.out.print("Enter the value to be deleted: ");
                         int deleteVal = scanner.nextInt();
-                        bintree.delete(deleteVal);
+                        bintree.delete(root, deleteVal);
                     }
-
                     break;
                 case 6:
-                    System.out.print("exiting.....");
+                    System.out.println("Exiting...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -210,5 +202,4 @@ public class tree {
         }
         scanner.close();
     }
-
 }
