@@ -121,14 +121,18 @@ public class tree {
     
         if (val < root.data) {
             root.left = delete(root.left, val);
-        } else if (val > root.data) {
+        }
+        else if (val > root.data) {
             root.right = delete(root.right, val);
-        } else {
+        } 
+        else {
             if (root.left == null) {
                 return root.right;
-            } else if (root.right == null) {
+            } 
+            else if (root.right == null) {
                 return root.left;
-            } else {
+            } 
+            else {
                 Node currentNode = root.right;
                 while (currentNode.left != null) {
                     currentNode = currentNode.left;

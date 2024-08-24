@@ -3,6 +3,9 @@ import java.util.Scanner;
 class Node {
     int data;
     Node next;
+    public int value;
+    public Node left;
+    public Node right;
 
     Node(int data) {
         this.data = data;
