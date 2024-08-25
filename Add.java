@@ -41,7 +41,7 @@ public class Add {
 
     void dfs(TreeNode root) {
         if (root != null) {
-            System.out.print(root.value + " ");
+            System.out.println(root.value);
             dfs(root.left);
             dfs(root.right);
         }
@@ -57,22 +57,16 @@ public class Add {
 
     void bfs(TreeNode root) {
         Queue<TreeNode> queue = new LinkedList<>();
-        if (root == null) {
-            System.out.println("The tree is Empty");
-            return;
-        }
-
         queue.add(root);
 
         while (!queue.isEmpty()) {
             TreeNode currentNode = queue.remove();
             System.out.print(currentNode.value + " ");
-            if (currentNode.left != null || currentNode.right != null) {
-                if (currentNode.left != null) {
-                    queue.add(currentNode.left);
-                } else {
-                    queue.add(currentNode.right);
-                }
+            if (currentNode.left != null) {
+                queue.add(currentNode.left);
+            }
+            if (currentNode.right != null) {
+                queue.add(currentNode.right);
             }
         }
     }
@@ -101,14 +95,26 @@ public class Add {
                     break;
 
                 case 2:
+                    if (bst.root == null) {
+                        System.out.println("The tree is Empty");
+                        return;
+                    }
                     bst.inorder(bst.root);
                     System.out.println();
                     break;
                 case 3:
+                    if (bst.root == null) {
+                        System.out.println("The tree is Empty");
+                        return;
+                    }
                     bst.dfs(bst.root);
                     System.out.println();
                     break;
                 case 4:
+                    if (bst.root == null) {
+                        System.out.println("The tree is Empty");
+                        return;
+                    }
                     bst.bfs(bst.root);
                     System.out.println();
                     break;
