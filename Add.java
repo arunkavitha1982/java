@@ -11,18 +11,18 @@ public class Add {
         }
     }
 
+    Queue<TreeNode> queue = new LinkedList<>();
     TreeNode root;
 
     void insert(int value) {
         TreeNode newNode = new TreeNode(value);
-        Queue<TreeNode> queue = new LinkedList<>();
         if (root == null) {
             root = newNode;
             return;
         }
         queue.add(root);
 
-        while (!queue.isEmpty()) {
+        // while (!queue.isEmpty()) {
             TreeNode currentNode = queue.remove();
             if (currentNode.left == null) {
                 currentNode.left = newNode;
@@ -35,13 +35,12 @@ public class Add {
                 return;
             }
             queue.add(currentNode.right);
-
-        }
+        // }
     }
 
     void dfs(TreeNode root) {
         if (root != null) {
-            System.out.println(root.value);
+            System.out.print(root.value);
             dfs(root.left);
             dfs(root.right);
         }
