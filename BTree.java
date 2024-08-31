@@ -24,9 +24,7 @@ class AVL {
     void inOrder(BTree root) {
         if (root != null) {
             inOrder(root.left);
-
-            System.out.println("height of " + root.data + " is " + root.height);
-
+            System.out.println(root.data);
             inOrder(root.right);
         }
     }
@@ -34,6 +32,14 @@ class AVL {
     void preOrder(BTree root) {
         if (root != null) {
             System.out.println(root.data);
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    }
+
+    void findHeight(BTree root) {
+        if (root != null) {
+            System.out.println("height of " + root.data + " is " + root.height);
             preOrder(root.left);
             preOrder(root.right);
         }
@@ -113,6 +119,7 @@ class AVL {
                 System.out.println("4 -> Show Postorder");
                 System.out.println("5 -> Delete Data");
                 System.out.println("6 -> Update");
+                System.out.println("7 ->Find the Node height");
                 System.out.println("7 -> Exit");
                 System.out.print("Enter Your Option : ");
 
