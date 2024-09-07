@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class BTree {
-
     int data;
     int height;
     BTree left;
@@ -14,7 +13,6 @@ public class BTree {
 }
 
 class AVL {
-
     static BTree root;
 
     public AVL() {
@@ -24,7 +22,7 @@ class AVL {
     void inOrder(BTree root) {
         if (root != null) {
             inOrder(root.left);
-            System.out.println(root.data);
+            System.out.println("height of " + root.data + " is " + root.height);
             inOrder(root.right);
         }
     }
@@ -32,14 +30,6 @@ class AVL {
     void preOrder(BTree root) {
         if (root != null) {
             System.out.println(root.data);
-            preOrder(root.left);
-            preOrder(root.right);
-        }
-    }
-
-    void findHeight(BTree root) {
-        if (root != null) {
-            System.out.println("height of " + root.data + " is " + root.height);
             preOrder(root.left);
             preOrder(root.right);
         }
@@ -53,104 +43,146 @@ class AVL {
         }
     }
 
-    void insertData(int val, BTree root) {
-        BTree currentNode = root;
-        BTree newNode = new BTree(val);
-        if (currentNode.data == val) {
-            System.out.println("The root value already exists");
-            return;
+    BTree delTree(int val, BTree node) {
+        if (node == null) {
+            System.out.println("Node not found");
+            return node;
+        }
+        if (val < node.data) {
+            node.left = delTree(val, node.left);
+        } else if (val > node.data) {
+            node.right = delTree(val, node.right);
         } else {
-            if (val < currentNode.data) {
-                if (currentNode.left == null) {
-                    if (currentNode.right == null) {
-                        currentNode.height++;
-                    }
-                    currentNode.left = newNode;
-                    System.out.println("The value was added to the left");
-                    return;
-                } else {
-                    insertData(val, currentNode.left);
-                    height(currentNode);
-                }
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
             } else {
-                if (currentNode.right == null) {
-                    if (currentNode.left == null) {
-                        currentNode.height++;
-                    }
-                    currentNode.right = newNode;
-                    System.out.println("The value was added to the right");
-                    return;
-                } else {
-                    insertData(val, currentNode.right);
-                    height(currentNode);
+                BTree currentNode = node.right;
+                while (currentNode.left != null) {
+                    currentNode = currentNode.left;
                 }
+                node.data = currentNode.data;
+                node.right = delTree(currentNode.data, node.right);
             }
+        }
+        return balanceTree(val, node);
+    }
+
+    BTree balanceTree(int val, BTree node) {
+        int leftHeight = node.left == null ? 0 : node.left.height;
+        int rightHeight = node.right == null ? 0 : node.right.height;
+        node.height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+        int balance = leftHeight - rightHeight;
+
+        if (balance > 1 && node.left.data > val) {
+            node = rightRotate(node);
+        } else if (balance > 1 && node.left.data < val) {
+            node.left = leftRotate(node.left);
+            node = rightRotate(node);
+        } else if (balance < -1 && node.right.data < val) {
+            node = leftRotate(node);
+        } else if (balance < -1 && node.right.data > val) {
+            node.right = rightRotate(node.right);
+            node = leftRotate(node);
+        }
+        return node;
+    }
+
+    BTree insertData(int val, BTree node) {
+        if (node == null) {
+            BTree newNode = new BTree(val);
+            System.out.println("successfully added");
+            return newNode;
+        } else {
+            if (val < node.data) {
+                node.left = insertData(val, node.left);
+            } else if (val > node.data) {
+                node.right = insertData(val, node.right);
+            } else {
+                System.out.println("The value was already exist");
+                return node;
+            }
+            return balanceTree(val, node);
         }
     }
 
-    int height(BTree currentNode) {
-        int leftHeight = 0;
-        int rightHeight = 0;
+    static void updateHeight(BTree node) {
+        int leftNodeHeight = node.left == null ? 0 : node.left.height;
+        int rightNodeHeight = node.right == null ? 0 : node.right.height;
+        node.height = (leftNodeHeight > rightNodeHeight ? leftNodeHeight : rightNodeHeight) + 1;
+    }
 
-        if (currentNode.left != null) {
-            leftHeight = currentNode.left.height;
+    BTree leftRotate(BTree node) {
+        BTree newRoot = node.right;
+        if (newRoot == null) {
+            return node;
         }
-        if (currentNode.right != null) {
-            rightHeight = currentNode.right.height;
+        BTree rightNode = newRoot.left;
+        newRoot.left = node;
+        node.right = rightNode;
+        updateHeight(node);
+        updateHeight(newRoot);
+        return newRoot;
+    }
+
+    BTree rightRotate(BTree node) {
+        BTree newRoot = node.left;
+        if (newRoot == null) {
+            return node;
         }
-        if (leftHeight > rightHeight) {
-            currentNode.height = leftHeight + 1;
-        } else {
-            currentNode.height = rightHeight + 1;
-        }
-        return currentNode.height;
+        BTree leftNode = newRoot.right;
+        newRoot.right = node;
+        node.left = leftNode;
+        updateHeight(node);
+        updateHeight(newRoot);
+        return newRoot;
     }
 
     public static void main(String[] args) {
         AVL B1 = new AVL();
 
         int userInput;
-        try (Scanner textFeild = new Scanner(System.in)) {
-            do {
-                System.out.println("---------------Binary Tree----------------");
-                System.out.println("1 -> Insert Data");
-                System.out.println("2 -> Show Inorder");
-                System.out.println("3 -> Show Preorder");
-                System.out.println("4 -> Show Postorder");
-                System.out.println("5 -> Delete Data");
-                System.out.println("6 -> Update");
-                System.out.println("7 ->Find the Node height");
-                System.out.println("7 -> Exit");
-                System.out.print("Enter Your Option : ");
+        Scanner textFeild = new Scanner(System.in);
+        do {
+            System.out.println("---------------Binary Tree----------------");
+            System.out.println("1 -> Insert Data");
+            System.out.println("2 -> Show Inorder");
+            System.out.println("3 -> Show Preorder");
+            System.out.println("4 -> Show Postorder");
+            System.out.println("5 -> Delete");
+            System.out.println("6 -> Exit");
+            System.out.print("Enter Your Option : ");
 
-                userInput = textFeild.nextInt();
+            userInput = textFeild.nextInt();
 
-                switch (userInput) {
-                    case 1:
-                        System.out.print("Enter the insert value : ");
-                        int insertValue = textFeild.nextInt();
-                        if (root == null) {
-                            BTree newNode = new BTree(insertValue);
-                            root = newNode;
-                        } else {
-                            B1.insertData(insertValue, root);
-                        }
-                        break;
-                    case 2:
-                        B1.inOrder(root);
-                        break;
-                    case 3:
-                        B1.preOrder(root);
-                        break;
-                    case 4:
-                        B1.postOrder(root);
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-            } while (userInput != 5);
-        } catch (AssertionError e) {
-
-        }
+            switch (userInput) {
+                case 1:
+                    System.out.print("Enter the insert value : ");
+                    int insertValue = textFeild.nextInt();
+                    root = B1.insertData(insertValue, root);
+                    break;
+                case 2:
+                    B1.inOrder(root);
+                    break;
+                case 3:
+                    B1.preOrder(root);
+                    break;
+                case 4:
+                    B1.postOrder(root);
+                    break;
+                case 5:
+                    System.out.print("Enter the delete value : ");
+                    int deleteValue = textFeild.nextInt();
+                    root = B1.delTree(deleteValue, root);
+                    break;
+                case 6:
+                    System.out.print("Program Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (userInput != 7);
     }
+
 }
