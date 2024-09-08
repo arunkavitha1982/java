@@ -69,11 +69,18 @@ class AVL {
         return balanceTree(val, node);
     }
 
-    BTree balanceTree(int val, BTree node) {
+    int getBalance(BTree node){
+        if (node == null) {
+            return 0;
+        }
         int leftHeight = node.left == null ? 0 : node.left.height;
         int rightHeight = node.right == null ? 0 : node.right.height;
-        node.height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
-        int balance = leftHeight - rightHeight;
+        return leftHeight - rightHeight;
+    }
+
+    
+    BTree balanceTree(int val, BTree node) {
+        int balance = getBalance(node);
 
         if (balance > 1 && node.left.data > val) {
             node = rightRotate(node);
